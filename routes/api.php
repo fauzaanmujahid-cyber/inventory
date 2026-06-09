@@ -5,16 +5,20 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ItemController;
 
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+Route::prefix('v1')->group(function () {
 
-Route::middleware('auth:sanctum')->get('/check-token', function (Request $request) {
-    return response()->json([
-        'auth_check' => auth()->check(),
-        'user' => $request->user(),
-    ]);
-});
+    Route::post('register',
+        'App\Http\Controllers\AuthController@register');
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::apiResource('items', ItemController::class);
+    Route::post('login',
+        'App\Http\Controllers\AuthController@login');
+
+    Route::middleware('auth:sanctum')->group(function () {
+
+        Route::apiResource('categories',
+            'App\Http\Controllers\CategoryController');
+
+        Route::apiResource('items',
+            'App\Http\Controllers\ItemController');
+    });
 });
