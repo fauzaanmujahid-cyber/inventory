@@ -2,56 +2,88 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Api\BaseController;
+use App\Http\Requests\StoreCategoryRequest;
+use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
-use Illuminate\Http\Request;
 
-class CategoryController extends Controller
+class CategoryController extends BaseController
 {
-    protected $categoryService;
-
-    public function __construct(CategoryService $categoryService)
-    {
-        $this->categoryService = $categoryService;
-    }
-
     public function index()
     {
-        return response()->json(
-            $this->categoryService->getAll()
+        return $this->success(
+            Category::all(),
+            'Data kategori berhasil ditampilkan'
         );
     }
 
     public function store(StoreCategoryRequest $request)
     {
-        return response()->json(
-            $this->categoryService->create([
-                'name' => $request->name
-            ])
+        $category = Category::create(
+            $request->validated()
+        );
+
+        return $this->success(
+            $category,
+            'Kategori berhasil dibuat',
+            201
         );
     }
 
-    public function show(string $id)
+    public function show($id)
     {
-        return response()->json(
-            $this->categoryService->findById($id)
+        $category = Category::find($id);
+
+        if (!$category) {
+            return $this->error(
+                'Kategori tidak ditemukan',
+                404
+            );
+        }
+
+        return $this->success(
+            $category,
+            'Detail kategori berhasil ditampilkan'
         );
     }
 
-    public function update(UpdateCategoryRequest $request, string $id)
+    public function update(UpdateCategoryRequest $request, $id)
     {
-        return response()->json(
-            $this->categoryService->update($id, [
-                'name' => $request->name
-            ])
+        $category = Category::find($id);
+
+        if (!$category) {
+            return $this->error(
+                'Kategori tidak ditemukan',
+                404
+            );
+        }
+
+        $category->update(
+            $request->validated()
+        );
+
+        return $this->success(
+            $category,
+            'Kategori berhasil diperbarui'
         );
     }
 
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        $this->categoryService->delete($id);
+        $category = Category::find($id);
 
-        return response()->json([
-            'message' => 'Category deleted'
-        ]);
+        if (!$category) {
+            return $this->error(
+                'Kategori tidak ditemukan',
+                404
+            );
+        }
+
+        $category->delete();
+
+        return $this->success(
+            null,
+            'Kategori berhasil dihapus'
+        );
     }
 }
