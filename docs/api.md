@@ -72,3 +72,45 @@ GET /items/{id}
 PUT /items/{id}
 
 DELETE /items/{id}
+
+## Items
+
+GET /items
+
+GET /items?category_id={id}
+
+POST /items
+
+GET /items/{id}
+
+PUT /items/{id}
+
+DELETE /items/{id}
+
+### Filter Item Berdasarkan Kategori
+
+Method: GET
+
+URL:
+
+http://localhost:8000/api/v1/items?category_id=1
+
+Header:
+
+Authorization: Bearer {token}
+
+Response:
+
+```json
+{
+    "success": true,
+    "message": "Data item berhasil diambil",
+    "data": [
+        {
+            "id": 1,
+            "name": "Laptop",
+            "category_id": 1
+        }
+    ]
+}
+```
