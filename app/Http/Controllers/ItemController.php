@@ -11,6 +11,7 @@ class ItemController extends BaseController
 {
     public function index(Request $request)
 {
+     // Filter item berdasarkan category_id jika parameter diberikan
     $query = Item::with('category');
 
     if ($request->filled('category_id')) {
