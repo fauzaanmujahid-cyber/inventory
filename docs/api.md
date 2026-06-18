@@ -72,3 +72,12 @@ GET /items/{id}
 PUT /items/{id}
 
 DELETE /items/{id}
+
+
+### GET /api/v1/items?category_id={id}
+
+Description:
+Filter item berdasarkan kategori (opsional).
+
+Contoh:
+GET /api/v1/items?category_id=1
