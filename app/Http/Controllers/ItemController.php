@@ -9,13 +9,19 @@ use App\Models\Item;
 
 class ItemController extends BaseController
 {
-    public function index()
-    {
-        return $this->success(
-            Item::all(),
-            'Data item berhasil ditampilkan'
-        );
+    public function index(Request $request)
+{
+    $query = Item::with('category');
+
+    if ($request->filled('category_id')) {
+        $query->where('category_id', $request->category_id);
     }
+
+    return $this->success(
+        $query->get(),
+        'Data item berhasil diambil'
+    );
+}
 
     public function store(StoreItemRequest $request)
     {
