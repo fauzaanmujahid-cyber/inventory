@@ -6,23 +6,31 @@ use App\Http\Controllers\Api\BaseController;
 use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
 use App\Models\Item;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ItemController extends BaseController
 {
     public function index(Request $request)
-{
-    $query = Item::with('category');
+    {
+        $query = Item::with('category');
 
-    if ($request->filled('category_id')) {
-        $query->where('category_id', $request->category_id);
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        return $this->success($query->get());
     }
-
-    return $this->success($query->get());
-}
 
     public function store(StoreItemRequest $request)
     {
+        
         $item = Item::create($request->validated());
+
+        Log::info('Item created', [
+            'id' => $item->id,
+            'name' => $item->name
+        ]);
 
         return $this->success(
             $item,
@@ -61,6 +69,10 @@ class ItemController extends BaseController
 
         $item->update($request->validated());
 
+        Log::info('Item updated', [
+            'id' => $item->id
+        ]);
+
         return $this->success(
             $item,
             'Item berhasil diperbarui'
@@ -77,6 +89,10 @@ class ItemController extends BaseController
                 404
             );
         }
+
+        Log::info('Item deleted', [
+            'id' => $item->id
+        ]);
 
         $item->delete();
 
