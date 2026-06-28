@@ -24,7 +24,7 @@ class ItemController extends BaseController
 
     public function store(StoreItemRequest $request)
     {
-        dd($request->all());
+        
         $item = Item::create($request->validated());
 
         Log::info('Item created', [
